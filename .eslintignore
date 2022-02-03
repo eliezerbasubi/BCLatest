@@ -1,0 +1,4 @@
+tailwind.config.js
+*.test.tsx
+vite.config.js
+postcss.config.js
