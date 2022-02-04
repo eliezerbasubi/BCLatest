@@ -30,12 +30,12 @@ const Transactions = () => {
                     <tr key={index.toFixed()}>
                       <td className="pb-3 border-0">
                         <div className="font-medium bg-light-gray py-3 p-4 rounded-tl-md rounded-bl-md">
-                          {transaction}
+                          {transaction.blockHash}
                         </div>
                       </td>
                       <td className="pb-3 border-0">
                         <div className="font-medium bg-light-gray py-3 p-4 rounded-tr-md rounded-br-md">
-                          1000
+                          {transaction.value}
                         </div>
                       </td>
                     </tr>

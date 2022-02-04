@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { getWeb3Service } from "../helpers";
-import { ICurrentBlock } from "../types";
+import { ICurrentBlock, ITransaction } from "../types";
 
 type IContext = {
   currentBlock: ICurrentBlock;
@@ -27,13 +27,31 @@ export const useBlockchain = () => useContext(BlockchainContext);
 
 const BlockchainProvider: FC = ({ children }): JSX.Element => {
   const [currentBlock, setCurrentBlock] = useState<ICurrentBlock>({});
-  // const [loading, setLoading] = useState(false);
   const [isWeb3Supported, setIsWeb3Supported] = useState(true);
+
+  const getTransactions = async (transactions: string[]) => {
+    const txns = await transactions.map(async (tx: string) => {
+      const transaction = await getWeb3Service().eth.getTransaction(tx);
+      return transaction;
+    });
+
+    const blockTransactions = await Promise.all(txns).then((txs) => {
+      return txs
+        .sort((a, b) => +b.value - +a.value)
+        .map((transaction) => {
+          transaction.value = getWeb3Service().utils.fromWei(
+            transaction.value,
+            "ether"
+          );
+          return transaction;
+        });
+    });
+
+    return blockTransactions as ITransaction[];
+  };
 
   const getBlockchainData = useCallback(async () => {
     const web3Service = getWeb3Service();
-
-    // setLoading(true);
 
     const latestBlock = await web3Service.eth.getBlock("latest").catch(() => {
       setIsWeb3Supported(false);
@@ -46,13 +64,24 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
     if (latestBlock) {
       const { number, transactions, miner, totalDifficulty } = latestBlock;
 
-      setCurrentBlock({
+      try {
+        const blockTransactions = await getTransactions(transactions);
+
+        setCurrentBlock((block) => ({
+          ...block,
+          transactions: blockTransactions,
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+
+      setCurrentBlock((block) => ({
+        ...block,
         blockNumber: number,
         numberOfTransactions: transactions.length,
         miner,
         totalDifficulty,
-        transactions,
-      });
+      }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
