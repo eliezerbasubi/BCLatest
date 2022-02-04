@@ -13,12 +13,15 @@ type IContext = {
   currentBlock: ICurrentBlock;
   loading?: boolean;
   isWeb3Supported: boolean;
+  isRequestPaused?: boolean;
+  onToggleRequest?: () => void;
 };
 
 const defaultCtxProps: IContext = {
   currentBlock: {},
   loading: false,
   isWeb3Supported: true,
+  isRequestPaused: false,
 };
 
 const BlockchainContext = createContext<IContext>(defaultCtxProps);
@@ -29,6 +32,7 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
   const [currentBlock, setCurrentBlock] = useState<ICurrentBlock>({});
   const [isWeb3Supported, setIsWeb3Supported] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [isRequestPaused, setIsRequestPaused] = useState(false);
 
   const getTransactions = async (transactions: string[]) => {
     const web3 = getWeb3Service();
@@ -94,9 +98,19 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onToggleRequest = () => {
+    setIsRequestPaused(!isRequestPaused);
+  };
+
   return (
     <BlockchainContext.Provider
-      value={{ currentBlock, loading, isWeb3Supported }}
+      value={{
+        currentBlock,
+        loading,
+        isWeb3Supported,
+        isRequestPaused,
+        onToggleRequest,
+      }}
     >
       {children}
     </BlockchainContext.Provider>

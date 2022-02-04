@@ -11,7 +11,7 @@ const Transactions = () => {
     <div id="transactions" className="bg-[#E5E5E5]">
       <div className="min-h-screen w-full max-w-[1420px] mx-auto py-12">
         <h3 className="text-center uppercase text-xl md:text-2xl lg:text-3xl font-extrabold">
-          Transactions
+          Transactions - #{currentBlock.blockNumber}
         </h3>
 
         <div className="py-4 flex justify-center mt-8">
