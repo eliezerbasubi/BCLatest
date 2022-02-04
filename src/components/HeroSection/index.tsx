@@ -3,9 +3,10 @@ import VEthereum from "../../assets/vectors/VEthereum";
 import VSpinner from "../../assets/vectors/VSpinner";
 import { useBlockchain } from "../../contexts/blockchainProvider";
 import FloatingLabelItem from "../FloatingLabelItem";
+import Web3NotSupport from "../Web3NotSupport";
 
 const HeroSection = () => {
-  const { currentBlock, loading } = useBlockchain();
+  const { currentBlock, loading, isWeb3Supported } = useBlockchain();
 
   return (
     <div className="flex items-center justify-between flex-wrap space-y-6">
@@ -21,12 +22,18 @@ const HeroSection = () => {
         </p>
       </div>
 
-      <div className="bg-white text-black p-8 border rounded-3xl shadow-md">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center w-full min-w-[450px] min-h-[494px]">
+      <div className="bg-white text-black p-8 border rounded-3xl shadow-md min-w-[250px] sm:min-w-[450px] min-h-[494px]">
+        {(loading && (
+          <div className="flex flex-col items-center justify-center w-full min-w-[250px] sm:min-w-[450px] min-h-[494px]">
             <VSpinner />
           </div>
-        ) : (
+        )) ||
+          null}
+
+        {(!isWeb3Supported && <Web3NotSupport className="min-h-[494px]" />) ||
+          null}
+
+        {!loading && isWeb3Supported && (
           <>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center">
@@ -47,7 +54,7 @@ const HeroSection = () => {
                 href="#transactions"
                 className="text-xs text-blue-500 font-medium mb-1"
               >
-                View all transactions
+                View all ({currentBlock.numberOfTransactions}) transactions
               </a>
             </div>
             <FloatingLabelItem

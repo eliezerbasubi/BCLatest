@@ -12,11 +12,13 @@ import { ICurrentBlock } from "../types";
 type IContext = {
   currentBlock: ICurrentBlock;
   loading?: boolean;
+  isWeb3Supported: boolean;
 };
 
 const defaultCtxProps: IContext = {
   currentBlock: {},
   loading: false,
+  isWeb3Supported: true,
 };
 
 const BlockchainContext = createContext<IContext>(defaultCtxProps);
@@ -25,16 +27,21 @@ export const useBlockchain = () => useContext(BlockchainContext);
 
 const BlockchainProvider: FC = ({ children }): JSX.Element => {
   const [currentBlock, setCurrentBlock] = useState<ICurrentBlock>({});
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [isWeb3Supported, setIsWeb3Supported] = useState(true);
 
   const getBlockchainData = useCallback(async () => {
     const web3Service = getWeb3Service();
 
-    setLoading(true);
+    // setLoading(true);
 
-    const latestBlock = await web3Service.eth.getBlock("latest");
+    const latestBlock = await web3Service.eth.getBlock("latest").catch(() => {
+      setIsWeb3Supported(false);
+    });
 
-    setLoading(false);
+    if (latestBlock?.number === currentBlock.blockNumber) {
+      return;
+    }
 
     if (latestBlock) {
       const { number, transactions, miner, totalDifficulty } = latestBlock;
@@ -47,14 +54,22 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
         transactions,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    getBlockchainData();
-  }, [getBlockchainData]);
+    const timer = setInterval(() => {
+      getBlockchainData();
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <BlockchainContext.Provider value={{ currentBlock, loading }}>
+    <BlockchainContext.Provider value={{ currentBlock, isWeb3Supported }}>
       {children}
     </BlockchainContext.Provider>
   );

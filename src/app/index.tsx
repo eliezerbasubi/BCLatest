@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import HeroSection from "../components/HeroSection";
 import Navbar from "../components/Navbar";
 import Transactions from "../components/Transactions";
@@ -13,9 +13,7 @@ const App = () => {
           <HeroSection />
         </div>
       </div>
-      <div className=" bg-[#E5E5E5]">
-        <Transactions />
-      </div>
+      <Transactions />
     </div>
   );
 };
