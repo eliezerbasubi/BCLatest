@@ -3,13 +3,20 @@ import VEthereum from "../../assets/vectors/VEthereum";
 import VSpinner from "../../assets/vectors/VSpinner";
 import { useBlockchain } from "../../contexts/blockchainProvider";
 import FloatingLabelItem from "../FloatingLabelItem";
+import PausableButton from "../PausableButton";
 import Web3NotSupport from "../Web3NotSupport";
 
 const HeroSection = () => {
-  const { currentBlock, loading, isWeb3Supported } = useBlockchain();
+  const {
+    currentBlock,
+    loading,
+    isWeb3Supported,
+    isRequestPaused,
+    onToggleRequest,
+  } = useBlockchain();
 
   return (
-    <div className="flex items-center justify-between flex-wrap space-y-6">
+    <div className="flex items-center justify-between flex-wrap md:flex-nowrap gap-4 space-y-6">
       <div className="max-w-[500px]">
         <h2 className="font-medium text-2xl sm:text-3xl lg:text-4xl">
           Stay connected
@@ -20,6 +27,10 @@ const HeroSection = () => {
           Explore every little detail about the blockchain network you are
           interested in.
         </p>
+
+        <div className="mt-24">
+          <PausableButton paused={isRequestPaused} onClick={onToggleRequest} />
+        </div>
       </div>
 
       <div className="bg-white text-black p-8 border rounded-3xl shadow-md min-w-[250px] sm:min-w-[450px] min-h-[494px]">

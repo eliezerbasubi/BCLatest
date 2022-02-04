@@ -9,7 +9,7 @@ const FloatingLabelItem = ({ label, item }: Props) => {
   return (
     <div className="w-full bg-light-gray rounded-2xl p-4 mb-4">
       <p className="text-xs font-bold text-gray-thick">{label}</p>
-      <p className="text-black font-bold text-xl">{item}</p>
+      <p className="text-black font-bold text-xl truncate">{item}</p>
     </div>
   );
 };
