@@ -28,6 +28,7 @@ export const useBlockchain = () => useContext(BlockchainContext);
 const BlockchainProvider: FC = ({ children }): JSX.Element => {
   const [currentBlock, setCurrentBlock] = useState<ICurrentBlock>({});
   const [isWeb3Supported, setIsWeb3Supported] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const getTransactions = async (transactions: string[]) => {
     const txns = await transactions.map(async (tx: string) => {
@@ -87,6 +88,10 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    setLoading(!currentBlock.miner && !currentBlock.blockNumber);
+  }, [currentBlock]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       getBlockchainData();
     }, 1000);
@@ -98,7 +103,9 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
   }, []);
 
   return (
-    <BlockchainContext.Provider value={{ currentBlock, isWeb3Supported }}>
+    <BlockchainContext.Provider
+      value={{ currentBlock, loading, isWeb3Supported }}
+    >
       {children}
     </BlockchainContext.Provider>
   );
