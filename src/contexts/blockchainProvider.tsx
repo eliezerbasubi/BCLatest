@@ -31,8 +31,11 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
   const [loading, setLoading] = useState(true);
 
   const getTransactions = async (transactions: string[]) => {
+    const web3 = getWeb3Service();
     const txns = await transactions.map(async (tx: string) => {
-      const transaction = await getWeb3Service().eth.getTransaction(tx);
+      // @ts-nocheck
+      // @ts-ignore
+      const transaction = await web3.getBigGasLimitTransaction(tx);
       return transaction;
     });
 
@@ -40,10 +43,7 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
       return txs
         .sort((a, b) => +b.value - +a.value)
         .map((transaction) => {
-          transaction.value = getWeb3Service().utils.fromWei(
-            transaction.value,
-            "ether"
-          );
+          transaction.value = web3.utils.fromWei(transaction.value, "ether");
           return transaction;
         });
     });
@@ -65,16 +65,7 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
     if (latestBlock) {
       const { number, transactions, miner, totalDifficulty } = latestBlock;
 
-      try {
-        const blockTransactions = await getTransactions(transactions);
-
-        setCurrentBlock((block) => ({
-          ...block,
-          transactions: blockTransactions,
-        }));
-      } catch (error) {
-        console.log(error);
-      }
+      const blockTransactions = await getTransactions(transactions);
 
       setCurrentBlock((block) => ({
         ...block,
@@ -82,6 +73,7 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
         numberOfTransactions: transactions.length,
         miner,
         totalDifficulty,
+        transactions: blockTransactions,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

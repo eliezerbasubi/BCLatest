@@ -11,17 +11,19 @@ export const getWeb3Service = () => {
       "ws://localhost:8545"
   );
 
-  // web3.extend({
-  //   methods: [
-  //     {
-  //       name: "getBigGasLimitTransaction",
-  //       call: "eth_getTransactionByHash",
-  //       params: 1,
-  //       inputFormatter: [null],
-  //       outputFormatter: bigGasLimitTransactionFormatter,
-  //     },
-  //   ],
-  // });
+  web3.extend({
+    methods: [
+      {
+        name: "getBigGasLimitTransaction",
+        call: "eth_getTransactionByHash",
+        params: 1,
+        inputFormatter: [null],
+        // @ts-nocheck
+        // @ts-ignore
+        outputFormatter: bigGasLimitTransactionFormatter,
+      },
+    ],
+  });
 
   return web3;
 };
