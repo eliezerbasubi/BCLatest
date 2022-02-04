@@ -1,45 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { getWeb3Service } from "../helpers";
-
-interface ICurrentAccount {
-  blockNumber?: number;
-  numberOfTransactions?: number;
-  miner?: string;
-  totalDifficulty?: number;
-}
+import HeroSection from "../components/HeroSection";
+import Navbar from "../components/Navbar";
+import Transactions from "../components/Transactions";
 
 const App = () => {
-  const [currentAccount, setCurrentAccount] = useState<ICurrentAccount>({});
-
-  const getBlockchainData = useCallback(async () => {
-    const web3Service = getWeb3Service();
-    // const accounts = await web3Service.eth.getAccounts();
-    // const account = accounts[0];
-    // console.log(account);
-    const latestBlock = await web3Service.eth.getBlock("latest");
-    if (latestBlock) {
-      const { number, transactions, miner, totalDifficulty } = latestBlock;
-      setCurrentAccount({
-        blockNumber: number,
-        numberOfTransactions: transactions.length,
-        miner,
-        totalDifficulty,
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    getBlockchainData();
-  }, [getBlockchainData]);
-
   return (
-    <div className="w-full h-full">
-      <h1 className="text-blue-400">NRG LATEST INFO</h1>
+    <div className="w-full">
+      <div className="min-h-screen bg-primary">
+        <div className="w-full max-w-[1420px] mx-auto py-12 px-4 text-white">
+          <Navbar />
 
-      <p>Block Number: {currentAccount.blockNumber}</p>
-      <p>Number of Transactions: {currentAccount.numberOfTransactions}</p>
-      <p>Miner: {currentAccount.miner}</p>
-      <p>Total Difficulty: {currentAccount.totalDifficulty}</p>
+          <HeroSection />
+        </div>
+      </div>
+      <div className=" bg-[#E5E5E5]">
+        <Transactions />
+      </div>
     </div>
   );
 };
