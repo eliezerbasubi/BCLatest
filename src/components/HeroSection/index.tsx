@@ -47,15 +47,24 @@ const HeroSection = () => {
 
         {!loading && isWeb3Supported && (
           <>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between flex-wrap mb-3">
               <div className="flex items-center">
                 <VEthereum className="w-12 h-10 hidden" />
-                <p className="text-xl font-medium">{network.name}</p>
+                <p className="text-xl font-medium truncate">{network.name}</p>
               </div>
 
-              <p className="text-sm font-medium text-[rgba(60,60,67,.6)]">
-                Blockchain
-              </p>
+              <div className="flex items-center">
+                <div
+                  className={`w-4 h-4 rounded-full border-2 ${
+                    isRequestPaused
+                      ? "border-gray-400 bg-gray-200"
+                      : "bg-green-500 border-green-500"
+                  }`}
+                />
+                <p className="ml-2 text-sm font-medium text-[rgba(60,60,67,.6)]">
+                  {isRequestPaused ? "Paused" : "Running"}
+                </p>
+              </div>
             </div>
             <FloatingLabelItem
               label="Block Number"
