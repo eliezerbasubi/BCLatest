@@ -16,6 +16,7 @@ export interface ICurrentBlock {
   numberOfTransactions?: number;
   miner?: string;
   totalDifficulty?: number;
+  timestamp?: number;
   transactions?: ITransaction[];
 }
 
@@ -24,5 +25,7 @@ export interface INetwork {
   symbol: string;
   currency: string;
   explorerURL: string;
+  newRPCUrl: string;
   chainID: number;
+  mainNetId?: number;
 }

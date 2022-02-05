@@ -1,4 +1,6 @@
-export const SupportedChains = {
+import { INetwork } from "../../types";
+
+export const SupportedChains: Record<string, INetwork> = {
   nrg: {
     name: "Energi Mainnet",
     symbol: "NRG",
@@ -20,6 +22,7 @@ export const SupportedChains = {
     symbol: "BSC",
     currency: "BNB",
     chainID: 97,
+    mainNetId: 1,
     explorerURL: "https://testnet.bscscan.com/",
     newRPCUrl: "https://bsc-dataseed.binance.org/",
   },

@@ -50,6 +50,6 @@ const bigGasLimitTransactionFormatter = (tx: ITransaction) => {
 
 export const getChainById = (chainID: number) => {
   return Object.values(SupportedChains).find(
-    (chain) => chain.chainID === chainID
+    (chain) => chain.mainNetId === chainID || chain.chainID === chainID
   );
 };
