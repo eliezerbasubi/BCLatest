@@ -6,11 +6,13 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { getWeb3Service } from "../helpers";
-import { ICurrentBlock, ITransaction } from "../types";
+import { getChainById, getWeb3Service } from "../helpers";
+import { DEFAULT_NETWORK } from "../helpers/constants";
+import { ICurrentBlock, INetwork, ITransaction } from "../types";
 
 type IContext = {
   currentBlock: ICurrentBlock;
+  network: INetwork;
   loading?: boolean;
   isWeb3Supported: boolean;
   isRequestPaused?: boolean;
@@ -19,6 +21,7 @@ type IContext = {
 
 const defaultCtxProps: IContext = {
   currentBlock: {},
+  network: DEFAULT_NETWORK,
   loading: false,
   isWeb3Supported: true,
   isRequestPaused: false,
@@ -30,6 +33,8 @@ export const useBlockchain = () => useContext(BlockchainContext);
 
 const BlockchainProvider: FC = ({ children }): JSX.Element => {
   const [currentBlock, setCurrentBlock] = useState<ICurrentBlock>({});
+  const [currentNetwork, setCurrentNetwork] = useState({});
+
   const [isWeb3Supported, setIsWeb3Supported] = useState(true);
   const [loading, setLoading] = useState(true);
   const [isRequestPaused, setIsRequestPaused] = useState(false);
@@ -57,6 +62,15 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
 
   const getBlockchainData = useCallback(async () => {
     const web3Service = getWeb3Service();
+    const chainId = await web3Service.eth.net.getId();
+
+    const network = getChainById(chainId);
+
+    console.log(network, chainId);
+
+    if (network) {
+      setCurrentNetwork(network);
+    }
 
     const latestBlock = await web3Service.eth.getBlock("latest").catch(() => {
       setIsWeb3Supported(false);
@@ -109,6 +123,7 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
         loading,
         isWeb3Supported,
         isRequestPaused,
+        network: currentNetwork as INetwork,
         onToggleRequest,
       }}
     >

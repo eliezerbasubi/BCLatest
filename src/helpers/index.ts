@@ -3,13 +3,10 @@ import Web3 from "web3";
 import utils from "web3-utils";
 import { formatters } from "web3-core-helpers";
 import { ITransaction } from "../types";
+import { DEFAULT_NETWORK, SupportedChains } from "./constants";
 
 export const getWeb3Service = () => {
-  const web3 = new Web3(
-    Web3.givenProvider ||
-      "https://nodeapi.energi.network/v1/jsonrpc" ||
-      "ws://localhost:8545"
-  );
+  const web3 = new Web3(Web3.givenProvider || DEFAULT_NETWORK.newRPCUrl);
 
   web3.extend({
     methods: [
@@ -51,4 +48,8 @@ const bigGasLimitTransactionFormatter = (tx: ITransaction) => {
   return tx;
 };
 
-export default bigGasLimitTransactionFormatter;
+export const getChainById = (chainID: number) => {
+  return Object.values(SupportedChains).find(
+    (chain) => chain.chainID === chainID
+  );
+};

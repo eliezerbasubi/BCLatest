@@ -18,3 +18,11 @@ export interface ICurrentBlock {
   totalDifficulty?: number;
   transactions?: ITransaction[];
 }
+
+export interface INetwork {
+  name: string;
+  symbol: string;
+  currency: string;
+  explorerURL: string;
+  chainID: number;
+}

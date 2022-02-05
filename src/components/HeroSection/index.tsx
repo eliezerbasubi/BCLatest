@@ -8,8 +8,9 @@ import Web3NotSupport from "../Web3NotSupport";
 
 const HeroSection = () => {
   const {
-    currentBlock,
     loading,
+    network,
+    currentBlock,
     isWeb3Supported,
     isRequestPaused,
     onToggleRequest,
@@ -48,8 +49,8 @@ const HeroSection = () => {
           <>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center">
-                <VEthereum className="w-12 h-10" />
-                <p className="text-2xl font-medium">Ethereum</p>
+                <VEthereum className="w-12 h-10 hidden" />
+                <p className="text-xl font-medium">{network.name}</p>
               </div>
 
               <p className="text-sm font-medium text-[rgba(60,60,67,.6)]">
