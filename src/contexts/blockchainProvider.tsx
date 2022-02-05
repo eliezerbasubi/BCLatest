@@ -66,8 +66,6 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
 
     const network = getChainById(chainId);
 
-    console.log(network, chainId);
-
     if (network) {
       setCurrentNetwork(network);
     }
@@ -106,11 +104,15 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
       getBlockchainData();
     }, 1000);
 
+    if (isRequestPaused) {
+      clearInterval(timer);
+    }
+
     return () => {
       clearInterval(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isRequestPaused]);
 
   const onToggleRequest = () => {
     setIsRequestPaused(!isRequestPaused);
