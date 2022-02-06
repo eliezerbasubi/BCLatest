@@ -9,6 +9,7 @@ export interface ITransaction {
   value: number | string;
   to: string | null;
   from: string;
+  hash: string;
 }
 
 export interface ICurrentBlock {
@@ -16,7 +17,6 @@ export interface ICurrentBlock {
   numberOfTransactions?: number;
   miner?: string;
   totalDifficulty?: number;
-  timestamp?: number;
   transactions?: ITransaction[];
 }
 

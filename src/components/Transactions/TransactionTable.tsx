@@ -9,9 +9,10 @@ type Props = {
 const TransactionTable = ({ data, network }: Props) => {
   return (
     <div className="container mx-auto">
-      <div className="w-full overflow-auto bg-white border rounded-2xl p-8 lg:px-24 max-h-[500px]">
+      <div className="w-full overflow-auto bg-white border rounded-2xl p-8 px-4 sm:px-8 lg:px-24 max-h-[510px]">
         <div>
           <div className="flex items-center font-bold">
+            <div className="p-3 text-left min-w-[3rem]">Tx ID</div>
             <div className="p-3 text-left w-2/3 sm:w-1/2 lg:w-2/3">
               Transaction Hash
             </div>
@@ -22,8 +23,18 @@ const TransactionTable = ({ data, network }: Props) => {
               className="flex mb-2 bg-light-gray rounded-md"
               key={`${txn.transactionIndex}_${index.toFixed()}`}
             >
+              <div className="font-medium py-3 p-4 min-w-[3rem]">
+                #{txn.transactionIndex}
+              </div>
               <div className="w-4/5 sm:w-1/2 lg:w-2/3 font-medium py-3 p-4 rounded-tl-md rounded-bl-md truncate">
-                {txn.blockHash}
+                <a
+                  href={`${network?.explorerURL}/tx/${txn.hash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500"
+                >
+                  {txn.hash}
+                </a>
               </div>
               <div className="w-36 sm:w-48 font-medium py-3 p-4 rounded-tr-md rounded-br-md truncate">
                 {txn.value}
