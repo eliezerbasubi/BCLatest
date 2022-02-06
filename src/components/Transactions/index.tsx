@@ -15,7 +15,7 @@ const Transactions = () => {
           Transactions - #{currentBlock.blockNumber}
         </h3>
 
-        <div className="py-4 w-full flex justify-center mt-8">
+        <div className="py-4 w-full flex justify-center md:mt-8">
           {(loading && <VSpinner />) || null}
           {!loading && (
             <TransactionTable
