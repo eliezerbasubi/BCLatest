@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import VEthereum from "../../assets/vectors/VEthereum";
 import VSpinner from "../../assets/vectors/VSpinner";
 import { useBlockchain } from "../../contexts/blockchainProvider";
@@ -16,25 +16,39 @@ const HeroSection = () => {
     onToggleRequest,
   } = useBlockchain();
 
+  const getHintText = useCallback(() => {
+    if (isRequestPaused) {
+      return "No incoming block is allowed to be displayed.";
+    }
+    return "Incoming block will be displayed.";
+  }, [isRequestPaused]);
+
   return (
     <div className="flex items-center justify-between flex-wrap md:flex-nowrap gap-4 space-y-6">
-      <div className="max-w-[500px]">
+      <div className="max-w-[500px] h-full">
         <h2 className="font-medium text-2xl sm:text-3xl lg:text-4xl">
           Stay connected
-          <br /> with the latest block in the blockchain
+          <br /> with the latest block on the blockchain
         </h2>
 
-        <p className="mt-4">
-          Explore every little detail about the blockchain network you are
-          interested in.
-        </p>
+        <ul className="my-5 list-disc ml-8">
+          <li>
+            Explore every detail of the currently created block on the network
+          </li>
+          <li className="mt-4">
+            Pause and resume block requests to inspect transactions within a
+            block.
+          </li>
+        </ul>
 
         <div className="mt-24">
           <PausableButton paused={isRequestPaused} onClick={onToggleRequest} />
         </div>
+
+        <div className="mt-6 text-xs">{getHintText()}</div>
       </div>
 
-      <div className="bg-white text-black p-8 border rounded-3xl shadow-md min-w-[250px] sm:min-w-[450px] min-h-[494px]">
+      <div className="bg-white text-black p-8 px-4 sm:px-8 border rounded-3xl shadow-md min-w-[250px] sm:min-w-[450px] min-h-[494px]">
         {(loading && (
           <div className="flex flex-col items-center justify-center w-full min-w-[250px] sm:min-w-[450px] min-h-[494px]">
             <VSpinner />
@@ -53,7 +67,7 @@ const HeroSection = () => {
                 <p className="text-xl font-medium truncate">{network.name}</p>
               </div>
 
-              <div className="flex items-center">
+              <div className="hidden md:flex items-center">
                 <div
                   className={`w-4 h-4 rounded-full border-2 ${
                     isRequestPaused

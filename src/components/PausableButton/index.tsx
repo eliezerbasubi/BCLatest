@@ -17,7 +17,7 @@ const PausableButton = ({ paused = false, onClick }: Props) => {
   return (
     <button
       onClick={onClick}
-      className="flex items-center justify-center space-x-6 w-full md:w-80 lg:w-96 text-center border-2 border-white bg-black hover:bg-white hover:text-black p-4 py-5 rounded-2xl"
+      className="flex items-center justify-center space-x-6 w-full lg:w-96 text-center border-2 border-white bg-black hover:bg-white hover:text-black p-4 py-3 sm:py-4 lg:py-5 rounded-2xl"
     >
       {(paused && <VResume />) || <VPause />}
       <p className="font-medium text-xl leading-tight">{getText()}</p>
