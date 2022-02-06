@@ -25,6 +25,8 @@ export const getWeb3Service = () => {
   return web3;
 };
 
+// ref https://github.com/ChainSafe/web3.js/issues/3936
+
 const bigGasLimitTransactionFormatter = (tx: ITransaction) => {
   if (tx.blockNumber !== null) {
     tx.blockNumber = utils.hexToNumber(tx.blockNumber);
@@ -37,10 +39,9 @@ const bigGasLimitTransactionFormatter = (tx: ITransaction) => {
   tx.gasPrice = formatters.outputBigNumberFormatter(tx.gasPrice as number);
   tx.value = formatters.outputBigNumberFormatter(tx.value as number);
   if (tx.to && utils.isAddress(tx.to)) {
-    // tx.to could be `0x0` or `null` while contract creation
     tx.to = utils.toChecksumAddress(tx.to);
   } else {
-    tx.to = null; // set to `null` if invalid address
+    tx.to = null;
   }
   if (tx.from) {
     tx.from = utils.toChecksumAddress(tx.from);
@@ -52,4 +53,17 @@ export const getChainById = (chainID: number) => {
   return Object.values(SupportedChains).find(
     (chain) => chain.mainNetId === chainID || chain.chainID === chainID
   );
+};
+
+export const middleEllipsis = (str: string, len: number) => {
+  if (!str) {
+    return "";
+  }
+  if (window.innerWidth < 768) {
+    return `${str.substr(0, len)}...${str.substr(
+      str.length - len,
+      str.length
+    )}`;
+  }
+  return str;
 };

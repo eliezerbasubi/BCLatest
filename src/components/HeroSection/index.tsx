@@ -48,7 +48,7 @@ const HeroSection = () => {
         <div className="mt-6 text-xs">{getHintText()}</div>
       </div>
 
-      <div className="bg-white text-black p-8 px-4 sm:px-8 border rounded-3xl shadow-md min-w-full sm:min-w-[50%] min-h-[494px]">
+      <div className="bg-white text-black p-8 px-4 sm:px-8 border rounded-3xl shadow-md min-w-full sm:min-w-[50%] lg:min-w-[40%] min-h-[494px]">
         {(loading && (
           <div className="flex flex-col items-center justify-center w-full min-w-full sm:min-w-[50%] min-h-[494px]">
             <VSpinner />

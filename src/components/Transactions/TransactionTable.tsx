@@ -1,4 +1,5 @@
 import React from "react";
+import { middleEllipsis } from "../../helpers";
 import { INetwork, ITransaction } from "../../types";
 
 type Props = {
@@ -12,7 +13,7 @@ const TransactionTable = ({ data, network }: Props) => {
       <div className="w-full overflow-auto bg-transparent md:bg-white border rounded-2xl p-8 px-4 sm:px-8 lg:px-24 max-h-screen md:max-h-[calc(100vh-120px)]">
         <div>
           <div className="hidden md:flex items-center font-bold">
-            <div className="p-3 text-left min-w-[3rem]">ID</div>
+            <div className="p-3 text-left min-w-[3rem] md:w-20">ID</div>
             <div className="p-3 text-left w-full md:w-1/2 lg:w-2/3">
               Transaction Hash
             </div>
@@ -24,7 +25,7 @@ const TransactionTable = ({ data, network }: Props) => {
               className="flex flex-wrap md:flex-nowrap mb-2 border md:border-none shadow-sm md:shadow-none bg-white md:bg-light-gray rounded-xl md:rounded-md py-3 md:py-0 px-1 md:px-0"
               key={`${txn.transactionIndex}_${index.toFixed()}`}
             >
-              <div className="py-2 md:py-3 p-4 min-w-[3rem] w-full md:w-auto">
+              <div className="py-2 md:py-3 p-4 min-w-[3rem] md:w-20 w-full">
                 <p className="text-xs md:hidden mr-3">Transaction ID </p>
                 <p className="font-medium">{txn.transactionIndex}</p>
               </div>
@@ -36,7 +37,7 @@ const TransactionTable = ({ data, network }: Props) => {
                   rel="noopener noreferrer"
                   className="text-blue-500 font-medium"
                 >
-                  {txn.hash}
+                  {middleEllipsis(txn.hash, 8)}
                 </a>
               </div>
               <div className="w-36 sm:w-48 py-2 md:py-3 p-4 rounded-tr-md rounded-br-md truncate">
