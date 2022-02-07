@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import BigNumber from "bignumber.js";
 import { getChainById, getWeb3Service } from "../helpers";
 import { DEFAULT_NETWORK } from "../helpers/constants";
 import { ICurrentBlock, INetwork, ITransaction } from "../types";
@@ -52,7 +53,12 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
       return txs
         .sort((a, b) => +b.value - +a.value)
         .map((transaction) => {
-          transaction.value = web3.utils.fromWei(transaction.value, "ether");
+          transaction.value = new BigNumber(
+            web3.utils.fromWei(transaction.value, "ether")
+          ).toFixed(2);
+          transaction.gasPrice = new BigNumber(
+            web3.utils.fromWei(transaction.gasPrice, "ether")
+          ).toFixed(2);
           return transaction;
         });
     });

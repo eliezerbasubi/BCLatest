@@ -37,7 +37,7 @@ const HeroSection = () => {
           </li>
           <li className="mt-4">
             Pause and resume block requests to inspect transactions within a
-            block.
+            block
           </li>
         </ul>
 
