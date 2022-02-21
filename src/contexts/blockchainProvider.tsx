@@ -4,11 +4,12 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import BigNumber from "bignumber.js";
 import { getChainById, getWeb3Service } from "../helpers";
-import { DEFAULT_NETWORK } from "../helpers/constants";
+import { DEFAULT_NETWORK, TIMER_DURATION } from "../helpers/constants";
 import { ICurrentBlock, INetwork, ITransaction } from "../types";
 
 type IContext = {
@@ -40,6 +41,16 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [isRequestPaused, setIsRequestPaused] = useState(false);
 
+  const timer = useRef<any>();
+
+  const clearStates = () => {
+    setLoading(false);
+    setIsWeb3Supported(false);
+    setIsRequestPaused(true);
+
+    clearInterval(timer.current);
+  };
+
   const getTransactions = async (transactions: string[]) => {
     const web3 = getWeb3Service();
     const txns = await transactions.map(async (tx: string) => {
@@ -67,36 +78,40 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
   };
 
   const getBlockchainData = useCallback(async () => {
-    const web3Service = getWeb3Service();
-    const chainId = await web3Service.eth.net.getId();
+    try {
+      const web3Service = getWeb3Service();
+      const chainId = await web3Service.eth.net.getId();
 
-    const network = getChainById(chainId);
+      const network = getChainById(chainId);
 
-    if (network) {
-      setCurrentNetwork(network);
-    }
+      if (network) {
+        setCurrentNetwork(network);
+      }
 
-    const latestBlock = await web3Service.eth.getBlock("latest").catch(() => {
-      setIsWeb3Supported(false);
-    });
+      const latestBlock = await web3Service.eth.getBlock("latest").catch(() => {
+        clearStates();
+      });
 
-    if (latestBlock?.number === currentBlock.blockNumber) {
-      return;
-    }
+      if (latestBlock?.number === currentBlock.blockNumber) {
+        return;
+      }
 
-    if (latestBlock) {
-      const { number, transactions, miner, totalDifficulty } = latestBlock;
+      if (latestBlock) {
+        const { number, transactions, miner, totalDifficulty } = latestBlock;
 
-      const blockTransactions = await getTransactions(transactions);
+        const blockTransactions = await getTransactions(transactions);
 
-      setCurrentBlock((block) => ({
-        ...block,
-        blockNumber: number,
-        numberOfTransactions: transactions.length,
-        miner,
-        totalDifficulty,
-        transactions: blockTransactions,
-      }));
+        setCurrentBlock((block) => ({
+          ...block,
+          blockNumber: number,
+          numberOfTransactions: transactions.length,
+          miner,
+          totalDifficulty,
+          transactions: blockTransactions,
+        }));
+      }
+    } catch (error) {
+      clearStates();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -106,16 +121,16 @@ const BlockchainProvider: FC = ({ children }): JSX.Element => {
   }, [currentBlock]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    timer.current = setInterval(() => {
       getBlockchainData();
-    }, 1000);
+    }, TIMER_DURATION);
 
     if (isRequestPaused) {
-      clearInterval(timer);
+      clearInterval(timer.current);
     }
 
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRequestPaused]);

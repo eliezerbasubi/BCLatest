@@ -29,3 +29,4 @@ export const SupportedChains: Record<string, INetwork> = {
 };
 
 export const DEFAULT_NETWORK = SupportedChains.nrg;
+export const TIMER_DURATION = 1000;
