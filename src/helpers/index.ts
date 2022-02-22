@@ -60,7 +60,7 @@ export const middleEllipsis = (str: string, len: number) => {
     return "";
   }
   if (window.innerWidth < 768) {
-    return `${str.substr(0, len)}...${str.substr(
+    return `${str.substring(0, len)}...${str.substring(
       str.length - len,
       str.length
     )}`;
