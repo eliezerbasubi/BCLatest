@@ -3,7 +3,6 @@ import VEthereum from "../../assets/vectors/VEthereum";
 import VSpinner from "../../assets/vectors/VSpinner";
 import { useBlockchain } from "../../contexts/blockchainProvider";
 import FloatingLabelItem from "../FloatingLabelItem";
-import NextUpdate from "../NextUpdate";
 import PausableButton from "../PausableButton";
 import Web3NotSupport from "../Web3NotSupport";
 
@@ -50,7 +49,6 @@ const HeroSection = () => {
       </div>
 
       <div className=" min-w-full sm:min-w-[50%] lg:min-w-[40%] min-h-[494px]">
-        <NextUpdate />
         <div className="bg-white text-black p-8 px-4 sm:px-8 border rounded-3xl shadow-md min-w-full sm:min-w-[50%] lg:min-w-[40%] min-h-[494px]">
           {(loading && (
             <div className="flex flex-col items-center justify-center w-full min-w-full sm:min-w-[50%] min-h-[494px]">
